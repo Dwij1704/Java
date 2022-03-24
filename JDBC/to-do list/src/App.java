@@ -3,7 +3,6 @@ import java.awt.*;
 import java.awt.event.*;
 import java.text.*;
 import java.util.*;
-
 public class App implements ActionListener {
 	static final String JDBC_DRIVER="com.mysql.jdbc.driver";
 	static final String DB_URL="jdbc:mysql://localhost/";
@@ -19,7 +18,7 @@ public class App implements ActionListener {
 
     TextField t1 = new TextField("");
     
-    Button b1,b2,b4;
+    Button b1,b2,b3,b4,b5;
 
 	static final String USER ="root";
 	static final String PASS ="";
@@ -27,14 +26,18 @@ public class App implements ActionListener {
 /////////////////////////////////////////////////////////////////////////////////////////////
 	App(){
            
-        f= new Frame("Test JDBC");
+        f= new Frame("To-Do List");
 //Button:-
         b1=new Button("Add");
             b1.setBounds(50,50,50,30);
         b2=new Button("Done");
             b2.setBounds(50,100,50,30);
+        b3=new Button("Un-Done");
+            b3.setBounds(110,100,70,30);
         b4=new Button("Delete");
-            b4.setBounds(100,100,50,30);    
+            b4.setBounds(50,150,50,30); 
+        b5=new Button("Delete To-Do");
+            b5.setBounds(110,150,90,30);    
 //TextArea:-
 //TextField:-        
         t1.setBounds(120,55,100,20);
@@ -47,7 +50,7 @@ public class App implements ActionListener {
         h3.setBounds(10,250,60,20);
 
         f.setVisible(true);
-        f.setSize(400,400);
+        f.setSize(400,300);
 
         f.add(a1);
         f.add(a2);
@@ -56,7 +59,9 @@ public class App implements ActionListener {
 
         f.add(b1);
         f.add(b2);
+        f.add(b3);
         f.add(b4);
+        f.add(b5);
 
         f.add(h1);
         f.add(h2);
@@ -64,7 +69,9 @@ public class App implements ActionListener {
         
         b1.addActionListener(this);
         b2.addActionListener(this);
+        b3.addActionListener(this);
         b4.addActionListener(this);
+        b5.addActionListener(this);
         
         Connection conn = null;
             Statement stmt = null;
@@ -74,7 +81,7 @@ public class App implements ActionListener {
                 Class.forName("com.mysql.jdbc.Driver");
                 conn = DriverManager.getConnection(URL,USER,PASS);
                 stmt = conn.createStatement();
-                String sql = "SELECT * FROM list";
+                String sql = "SELECT * FROM list WHERE id="+jodd.id;
                 ResultSet rs = stmt.executeQuery(sql);                
                 while(rs.next()){
                     a1.add(rs.getString("task"));                   
@@ -108,7 +115,7 @@ public class App implements ActionListener {
                 Class.forName("com.mysql.jdbc.Driver");
                 conn = DriverManager.getConnection(URL,USER,PASS);
                 stmt = conn.createStatement();
-                String sql = "SELECT * FROM l2";
+                String sql = "SELECT * FROM l2  WHERE id="+jodd.id;
                 ResultSet rs = stmt.executeQuery(sql);                
                 while(rs.next()){
                     a2.add(rs.getString("done"));             
@@ -157,7 +164,7 @@ public class App implements ActionListener {
                 conn = DriverManager.getConnection(URL,USER,PASS);
                 stmt = conn.createStatement();
                 Class.forName("com.mysql.jdbc.Driver");
-                  String sql =  "INSERT INTO list (`id`, `task`) VALUES (NULL, '"+t1.getText()+"')";
+                  String sql =  "INSERT INTO list (`sr_no`, `task`, `id`) VALUES (NULL, '"+t1.getText()+"', '"+jodd.id+"')";
                   stmt.executeUpdate(sql);    
                   a1.add(t1.getText());   
             }
@@ -192,7 +199,7 @@ public class App implements ActionListener {
                 conn = DriverManager.getConnection(URL,USER,PASS);
                 stmt = conn.createStatement();
                 Class.forName("com.mysql.jdbc.Driver");
-                  String sql =  "INSERT INTO `l2` (`id`, `done`) VALUES (NULL, '"+a1.getSelectedItem()+"  "+dateFormat.format(cal.getTime())+"');";
+                  String sql =  "INSERT INTO `l2` (`sr_no`, `done`, `id`) VALUES (NULL, '"+a1.getSelectedItem()+"  "+dateFormat.format(cal.getTime())+"', '"+jodd.id+"' );";
                   String sql2 =  "DELETE FROM `list` WHERE `task` = \""+a1.getSelectedItem()+"\";";
                       stmt.executeUpdate(sql2);
                   stmt.executeUpdate(sql);      
@@ -289,12 +296,100 @@ public class App implements ActionListener {
                 }
                 }
             }
+            else if(ob.getSource()==b3){
+            
+                try {
+                    char[] charArray = a2.getSelectedItem().toCharArray();
+                    String result = "";
+                    for (int i = 0; i < charArray.length; i++) {
+                        if(!Character.isLetter(charArray[i]) && !Character.isDigit(charArray[i]) && !Character.isWhitespace(charArray[i])) {
+                           
+                        } 
+                        else if(Character.isDigit(charArray[i])){
+    
+                        }
+                        else {
+                            result = result + charArray[i];                    
+                        }
+                        }
+                
+                String URL = "jdbc:mysql://localhost/to_do";
+                    conn = DriverManager.getConnection(URL,USER,PASS);
+                    stmt = conn.createStatement();
+                    Class.forName("com.mysql.jdbc.Driver");
+                      String sql =  "INSERT INTO `list` (`sr_no`, `task`, `id`) VALUES (NULL, \""+result+"\", '"+jodd.id+"');";
+                      String sql2 =  "DELETE FROM `l2` WHERE `done` = \""+a2.getSelectedItem()+"\";";
+                        stmt.executeUpdate(sql);
+                          stmt.executeUpdate(sql2);
+                      stmt.executeUpdate(sql);      
+                      a1.add(result); 
+                      a2.remove(a2.getSelectedItem());    
+                }
+                catch(SQLException se) {
+                    se.printStackTrace();
+                }
+                catch(Exception e) {
+                    e.printStackTrace();
+                }
+                finally{
+                try {
+                    if(stmt!=null)
+                    stmt.close();
+                }
+                catch(SQLException se2) {
+    
+                }
+                try {
+                    if(conn!=null)
+                    conn.close();
+                }
+                catch(SQLException se) {
+                    se.printStackTrace();
+                }
+                }
+            }
+            else if(ob.getSource()==b5) {
+                try {
+                    
+                String URL = "jdbc:mysql://localhost/to_do";
+                        conn = DriverManager.getConnection(URL,USER,PASS);
+                        stmt = conn.createStatement();
+                        Class.forName("com.mysql.jdbc.Driver");
+                          String sql =  "DELETE FROM `list` WHERE `task` = \""+a1.getSelectedItem()+"\";";
+                          stmt.executeUpdate(sql);      
+                          a1.remove(a1.getSelectedItem()); 
+                    }
+                    catch(SQLException se) {
+                        se.printStackTrace();
+                    }
+                    catch(Exception e) {
+                        e.printStackTrace();
+                    }
+                    finally{
+                    try {
+                        if(stmt!=null)
+                        stmt.close();
+                    }
+                    catch(SQLException se2) {
+        
+                    }
+                    try {
+                        if(conn!=null)
+                        conn.close();
+                    }
+                    catch(SQLException se) {
+                        se.printStackTrace();
+                    }
+                    }
+                }
+            } 
 
-              
-        }
+        
+        
 /////////////////////////////////For Displaying Data From Table//////////////////////////////////
           
 public static void main(String[] args) {
-        new App();   
+        
+        new jodd();
 	}
 }
