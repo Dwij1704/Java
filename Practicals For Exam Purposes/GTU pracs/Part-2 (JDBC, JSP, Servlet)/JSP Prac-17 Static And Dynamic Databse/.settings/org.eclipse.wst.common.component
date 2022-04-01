@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?><project-modules id="moduleCoreId" project-version="1.5.0">
+    <wb-module deploy-name="JSP Prac-17 Static And Dynamic Databse">
+        <wb-resource deploy-path="/" source-path="/src/main/webapp" tag="defaultRootSource"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/java"/>
+        <property name="context-root" value="JSP_Prac-17_Static_And_Dynamic_Databse"/>
+        <property name="java-output-path" value="/JSP Prac-17 Static And Dynamic Databse/build/classes"/>
+    </wb-module>
+</project-modules>
