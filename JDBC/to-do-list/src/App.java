@@ -13,6 +13,7 @@ public class App implements ActionListener {
 
     Label h1 = new Label("Done");
     Label h2 = new Label("To-Do");
+    Label h4 = new Label("");
     Label h3 = new Label("");
     
 
@@ -34,10 +35,10 @@ public class App implements ActionListener {
             b2.setBounds(50,100,50,30);
         b3=new Button("Un-Done");
             b3.setBounds(110,100,70,30);
-        b4=new Button("Delete");
-            b4.setBounds(50,150,50,30); 
+        b4=new Button("Delete Done");
+            b4.setBounds(50,150,85,30); 
         b5=new Button("Delete To-Do");
-            b5.setBounds(110,150,90,30);    
+            b5.setBounds(140,150,90,30);    
 //TextArea:-
 //TextField:-        
         t1.setBounds(120,55,100,20);
@@ -48,9 +49,11 @@ public class App implements ActionListener {
         h1.setBounds(10,250,50,20);
         h2.setBounds(10,200,60,20);
         h3.setBounds(10,250,60,20);
+        h4.setBounds(250,55,300,20);
+        h4.setForeground(Color.BLUE);
 
         f.setVisible(true);
-        f.setSize(400,300);
+        f.setSize(600,300);
 
         f.add(a1);
         f.add(a2);
@@ -65,6 +68,7 @@ public class App implements ActionListener {
 
         f.add(h1);
         f.add(h2);
+        f.add(h4);
         f.add(h3);
         
         b1.addActionListener(this);
@@ -167,6 +171,8 @@ public class App implements ActionListener {
                   String sql =  "INSERT INTO list (`sr_no`, `task`, `id`) VALUES (NULL, '"+t1.getText()+"', '"+jodd.id+"')";
                   stmt.executeUpdate(sql);    
                   a1.add(t1.getText());   
+                  h4.setText(t1.getText()+" Inserted!");
+                  t1.setText("");
             }
             catch(SQLException se) {
                 se.printStackTrace();
@@ -204,6 +210,7 @@ public class App implements ActionListener {
                       stmt.executeUpdate(sql2);
                   stmt.executeUpdate(sql);      
                   a2.add(a1.getSelectedItem()+"  "+dateFormat.format(cal.getTime())); 
+                  h4.setText(a1.getSelectedItem()+" Done!");
                   a1.remove(a1.getSelectedItem());    
             }
             catch(SQLException se) {
@@ -238,6 +245,7 @@ public class App implements ActionListener {
                     Class.forName("com.mysql.jdbc.Driver");
                       String sql =  "DELETE FROM `l2` WHERE `done` = \""+a2.getSelectedItem()+"\";";
                       stmt.executeUpdate(sql);    
+                      h4.setText(a2.getSelectedItem()+" Deleted After Done!");
                       a2.remove(a2.getSelectedItem());   
                 }
                 catch(SQLException se) {
@@ -263,39 +271,7 @@ public class App implements ActionListener {
                 }
                 }
             }
-              else if(ob.getSource()==b4) {
-            try {
-                
-            String URL = "jdbc:mysql://localhost/to_do";
-                    conn = DriverManager.getConnection(URL,USER,PASS);
-                    stmt = conn.createStatement();
-                    Class.forName("com.mysql.jdbc.Driver");
-                      String sql =  "DELETE FROM `l2` WHERE `done` = \""+a2.getSelectedItem()+"\";";
-                      stmt.executeUpdate(sql);       
-                }
-                catch(SQLException se) {
-                    se.printStackTrace();
-                }
-                catch(Exception e) {
-                    e.printStackTrace();
-                }
-                finally{
-                try {
-                    if(stmt!=null)
-                    stmt.close();
-                }
-                catch(SQLException se2) {
-    
-                }
-                try {
-                    if(conn!=null)
-                    conn.close();
-                }
-                catch(SQLException se) {
-                    se.printStackTrace();
-                }
-                }
-            }
+              
             else if(ob.getSource()==b3){
             
                 try {
@@ -320,8 +296,8 @@ public class App implements ActionListener {
                       String sql =  "INSERT INTO `list` (`sr_no`, `task`, `id`) VALUES (NULL, \""+result+"\", '"+jodd.id+"');";
                       String sql2 =  "DELETE FROM `l2` WHERE `done` = \""+a2.getSelectedItem()+"\";";
                         stmt.executeUpdate(sql);
-                          stmt.executeUpdate(sql2);
-                      stmt.executeUpdate(sql);      
+                          stmt.executeUpdate(sql2);     
+                      h4.setText(result+" Undone!");
                       a1.add(result); 
                       a2.remove(a2.getSelectedItem());    
                 }
@@ -356,7 +332,8 @@ public class App implements ActionListener {
                         stmt = conn.createStatement();
                         Class.forName("com.mysql.jdbc.Driver");
                           String sql =  "DELETE FROM `list` WHERE `task` = \""+a1.getSelectedItem()+"\";";
-                          stmt.executeUpdate(sql);      
+                          stmt.executeUpdate(sql);     
+                          h4.setText(a1.getSelectedItem()+" Deleted!"); 
                           a1.remove(a1.getSelectedItem()); 
                     }
                     catch(SQLException se) {
@@ -389,7 +366,6 @@ public class App implements ActionListener {
 /////////////////////////////////For Displaying Data From Table//////////////////////////////////
           
 public static void main(String[] args) {
-        
         new jodd();
 	}
 }
