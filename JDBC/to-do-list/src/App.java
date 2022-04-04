@@ -19,14 +19,13 @@ public class App implements ActionListener {
 
     TextField t1 = new TextField("");
     
-    Button b1,b2,b3,b4,b5;
+    Button b1,b2,b3,b4,b5,b6;
 
 	static final String USER ="root";
 	static final String PASS ="";
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 	App(){
-           
         f= new Frame("To-Do List");
 //Button:-
         b1=new Button("Add");
@@ -38,7 +37,9 @@ public class App implements ActionListener {
         b4=new Button("Delete Done");
             b4.setBounds(50,150,85,30); 
         b5=new Button("Delete To-Do");
-            b5.setBounds(140,150,90,30);    
+            b5.setBounds(140,150,90,30);   
+        b6=new Button("Logout");
+            b6.setBounds(400,250,70,30);  
 //TextArea:-
 //TextField:-        
         t1.setBounds(120,55,100,20);
@@ -65,7 +66,7 @@ public class App implements ActionListener {
         f.add(b3);
         f.add(b4);
         f.add(b5);
-
+        f.add(b6);
         f.add(h1);
         f.add(h2);
         f.add(h4);
@@ -76,6 +77,7 @@ public class App implements ActionListener {
         b3.addActionListener(this);
         b4.addActionListener(this);
         b5.addActionListener(this);
+        b6.addActionListener(this);
         
         Connection conn = null;
             Statement stmt = null;
@@ -199,6 +201,7 @@ public class App implements ActionListener {
         }
         else if(ob.getSource()==b2){
             try {
+                
             DateFormat dateFormat = new SimpleDateFormat("HH:mm:ss  dd/MM/yyyy ");
             Calendar cal = Calendar.getInstance();
             String URL = "jdbc:mysql://localhost/to_do";
@@ -358,6 +361,10 @@ public class App implements ActionListener {
                         se.printStackTrace();
                     }
                     }
+                }
+                else if(ob.getSource()==b6){
+                    new jodd();
+                    f.dispose();
                 }
             } 
 

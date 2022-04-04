@@ -1,6 +1,9 @@
 import java.sql.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.io.*;
+import sun.audio.*;
+
 import javax.swing.*;
 
 public class jodd implements ActionListener {
@@ -97,7 +100,18 @@ public class jodd implements ActionListener {
                   
                 ResultSet rs = stmt.executeQuery(sql);
                  if(rs.next()){
-                     
+                    String login = "D:\\BBIT\\Sem 6\\Java\\Vs jdbc\\to-do list\\login.wav";
+                    InputStream in = new FileInputStream(login);
+                
+                    AudioStream audioStream = new AudioStream(in);
+                
+                    AudioPlayer.player.start(audioStream);
+                    try{
+                        Thread.sleep(4000);
+                    }
+                    catch(Exception e){
+                        e.printStackTrace();
+                    }
                     id= rs.getInt("id");
                     new App();
                     f1.dispose();
@@ -106,6 +120,13 @@ public class jodd implements ActionListener {
                     label.setText("Incorrect Username or Password"); 
                     p2.setBounds(50, 350, 300, 50);   
                     p2.setVisible(true);
+
+                    String incorrect = "D:\\BBIT\\Sem 6\\Java\\Vs jdbc\\to-do list\\incorrect.wav";
+                    InputStream in = new FileInputStream(incorrect);
+                
+                    AudioStream audioStream = new AudioStream(in);
+                
+                    AudioPlayer.player.start(audioStream);
                }
             }
             catch(SQLException se) {
@@ -135,7 +156,9 @@ public class jodd implements ActionListener {
 
         if(jodd.getSource()==b2){
             try {
-                    
+                ActionEvent ae = 
+                new ActionEvent((Object)b1, ActionEvent.ACTION_PERFORMED, "");
+             Toolkit.getDefaultToolkit().getSystemEventQueue().postEvent(ae);
             String URL = "jdbc:mysql://localhost/to_do";
                 conn = DriverManager.getConnection(URL,USER,PASS);
                 stmt = conn.createStatement();
@@ -146,6 +169,12 @@ public class jodd implements ActionListener {
                     p2.setBounds(70, 350, 300, 50);
                     label.setText("Username Already Taken Please Register Again");
                     p2.setVisible(true);
+                    String user_taken = "D:\\BBIT\\Sem 6\\Java\\Vs jdbc\\to-do list\\username taken.wav";
+                    InputStream in = new FileInputStream(user_taken);
+                
+                    AudioStream audioStream = new AudioStream(in);
+                
+                    AudioPlayer.player.start(audioStream);
                     SwingUtilities.updateComponentTreeUI(f1);
                 }
                 else{
@@ -154,6 +183,12 @@ public class jodd implements ActionListener {
                     p2.setVisible(true);
                     String sql =  "INSERT INTO `users` (`username`, `password`) VALUES (\""+t1.getText()+"\", \""+pass+"\")";
                     stmt.executeUpdate(sql);
+                    String register = "D:\\BBIT\\Sem 6\\Java\\Vs jdbc\\to-do list\\register.wav";
+                    InputStream in = new FileInputStream(register);
+                
+                    AudioStream audioStream = new AudioStream(in);
+                
+                    AudioPlayer.player.start(audioStream);
                     SwingUtilities.updateComponentTreeUI(f1);
                 }
             }
